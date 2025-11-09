@@ -26,7 +26,6 @@ export default function ProjectsPage() {
           </button>
         ))}
       </div>
-
       {selectedProject && <KanbanBoard projectId={selectedProject} />}
     </div>
   );
