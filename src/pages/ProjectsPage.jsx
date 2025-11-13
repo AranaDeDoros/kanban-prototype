@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import KanbanBoard from "../components/KanbanBoard";
 import { useProjects } from "../api/useProjects";
+import { useUser } from "../api/useUser";
 import { useTokenContext } from "../context/TokenContext";
 
 export default function ProjectsPage() {
   const token = useTokenContext();
   const { data: projects } = useProjects(token);
+  const { data: user } = useUser(token);
   const [selectedProject, setSelectedProject] = useState(null);
 
   return (
@@ -26,7 +28,7 @@ export default function ProjectsPage() {
           </button>
         ))}
       </div>
-      {selectedProject && <KanbanBoard projectId={selectedProject} />}
+      {selectedProject && <KanbanBoard projectId={selectedProject} user={user} />}
     </div>
   );
 }

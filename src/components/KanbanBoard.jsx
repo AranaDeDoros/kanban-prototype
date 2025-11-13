@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useTasks } from "../api/useTasks";
 import { useTokenContext } from "../context/TokenContext";
-import {CreateTaskForm} from "./TaskForm";
+import { CreateTaskForm } from "./TaskForm";
+import { UserIcon } from "@heroicons/react/24/solid";
+import api from "../api/client";
 
-export default function KanbanBoard({ projectId }) {
+export default function KanbanBoard({ user, projectId }) {
   const token = useTokenContext();
   const { data: tasks, isLoading } = useTasks(projectId, token);
   const [showCreateForm, setshowCreateForm] = useState(false);
 
   const handleTaskCreated = (newTask) => {
     console.log("Task created:", newTask);
-   setColumns({
-     ...columns,
-     backlog: [...columns.backlog, newTask],
-   });
+    setColumns({
+      ...columns,
+      backlog: [...columns.backlog, newTask],
+    });
   };
 
   const [columns, setColumns] = useState({
@@ -22,6 +24,12 @@ export default function KanbanBoard({ projectId }) {
     wip: [],
     done: [],
   });
+
+  const logout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    window.location.href = "/login";
+  };
 
   useEffect(() => {
     if (tasks) {
@@ -65,18 +73,31 @@ export default function KanbanBoard({ projectId }) {
         [destCol]: destTasks,
       });
 
-      // api.patch(`/tasks/${moved.id}/`, { status: destCol }, { headers: { Authorization: `Bearer ${token}` } })
+      api.patch(
+        `/tasks/${moved.id}/`,
+        { status: destCol, assigned_to: user.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
     }
   };
 
   return (
     <>
-      <button
-        onClick={() => setshowCreateForm(!showCreateForm)}
-        className="px-3 py-1 rounded bg-blue-600 text-white"
-      >
-        add task
-      </button>
+      <div className="flex gap-4 mb-6">
+        <button
+          onClick={() => setshowCreateForm(!showCreateForm)}
+          className="px-3 py-1 rounded bg-blue-600 text-white"
+        >
+          add task
+        </button>
+        <button
+          onClick={logout}
+          className="px-3 py-1 rounded bg-red-600 text-white"
+        >
+          logout
+        </button>
+      </div>
+
       {showCreateForm ? (
         <CreateTaskForm
           token={token}
@@ -86,51 +107,77 @@ export default function KanbanBoard({ projectId }) {
       ) : null}
 
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-3 gap-4 p-4 min-h-screen bg-gray-100">
           {Object.entries(columns).map(([key, items]) => (
             <Droppable droppableId={key} key={key}>
               {(provided) => (
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="bg-gray-50 p-4 rounded shadow min-h-[400px] h-dvh"
+                  className="bg-gray-50 rounded-lg shadow flex flex-col h-[calc(100vh-4rem)]"
                 >
-                  <h3 className="font-bold mb-3 text-gray-700 uppercase text-center">
+                  <div className="p-4 border-b font-bold text-gray-700 uppercase text-center bg-white sticky top-0 z-10">
                     {key}
-                  </h3>
+                  </div>
 
-                  {items.map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id.toString()}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <div
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                          className="bg-gray-200 rounded p-2 mb-2  hover:shadow-sm"
-                        >
+                  {/* scroll*/}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                    {items.map((task, index) => (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id.toString()}
+                        index={index}
+                        isDragDisabled={task.status === "done"}
+                      >
+                        {(provided) => (
                           <div
-                            className={`${
-                              task.status === "done"
-                                ? "bg-green-500"
-                                : task.status === "wip"
-                                ? "bg-orange-500"
-                                : "bg-blue-500"
-                            }  text-white rounded p-1 mb-1`}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            className="bg-gray-100 rounded p-2 hover:shadow-sm transition"
                           >
-                            <strong>{task.title}</strong>
+                            <div
+                              className={`${
+                                task.status === "done"
+                                  ? "bg-green-500"
+                                  : task.status === "wip"
+                                  ? "bg-orange-500"
+                                  : "bg-blue-500"
+                              } text-white rounded-t p-1`}
+                            >
+                              <strong>{task.title}</strong>
+                            </div>
+
+                            <div className="bg-gray-500 text-white  p-1 text-sm ">
+                              <i>{task.description}</i>
+                            </div>
+
+                            <div
+                              className={`${
+                                task.status === "done"
+                                  ? "bg-green-500"
+                                  : task.status === "wip"
+                                  ? "bg-orange-500"
+                                  : "bg-blue-500"
+                              } text-white rounded-b p-1 mb-1 text-right`}
+                            >
+                              <div>
+                                <span>
+                                  <UserIcon className="size-4 text-white-500 inline-block mr-1" />
+                                  {task.status !== "backlog" ? (
+                                    <span>{user.username}</span>
+                                  ) : (
+                                    <span>NA</span>
+                                  )}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="bg-gray-500 text-white rounded p-1 text-sm">
-                            <i>{task.description} </i>
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
                 </div>
               )}
             </Droppable>

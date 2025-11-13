@@ -29,6 +29,7 @@ function AppContent() {
     <div className="p-6">
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         <Route
           path="/projects"
