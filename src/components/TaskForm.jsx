@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCreateTask } from "../api/useCreateTask";
-import {CriteriaList} from "./CriteriaList"
-
+import { CriteriaList } from "./CriteriaList";
 
 export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const defaultObj = {
@@ -9,17 +8,21 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     description: "",
     status: "backlog",
     project: projectId,
+    estimate_points: 1,
+    priority: "regular",
+    acceptance_criteria: "",
   };
   const [formData, setFormData] = useState(defaultObj);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { mutate: createTask, isPending } = useCreateTask(token);
+  const { mutate: createTask } = useCreateTask(token);
+  const [criteriaResetKey, setCriteriaResetKey] = useState(0);
 
-   const [criteriaList, setCriteriaList] = useState([]);
-   const handleCriteriaText = (items) => {
-     setCriteriaList(items);
-     console.log(items.map((c) => c.value).join("\n"));
-   };
+  const [criteriaList, setCriteriaList] = useState([]);
+  const handleCriteriaText = (items) => {
+    setCriteriaList(items);
+    console.log(items.map((c) => c.value).join("\n"));
+  };
 
   useEffect(() => {
     if (projectId) {
@@ -34,10 +37,18 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     if (!formData.project) {
       setError("Missing project ID");
+      setLoading(false);
       return;
+    }
+
+    if (Array.isArray(criteriaList) && criteriaList.length > 0) {
+      formData.acceptance_criteria = criteriaList
+        .map((c) => c.value)
+        .join("\n");
     }
 
     createTask(formData, {
@@ -50,10 +61,21 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           project: projectId,
           estimate_points: 1,
           priority: "regular",
+          acceptance_criteria: "",
         });
       },
       onError: () => setError("Error creating task"),
+      onSettled: () => {
+        setLoading(false);
+        handleReset();
+      },
     });
+  };
+
+  const handleReset = () => {
+    setCriteriaResetKey((prev) => prev + 1);
+    setCriteriaList([]);
+    setFormData(defaultObj);
   };
 
   return (
@@ -103,12 +125,12 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       </div>
 
       <div className="mb-3">
-        <CriteriaList onChange={handleCriteriaText} />
-        <ol>
+        <CriteriaList key={criteriaResetKey}  onChange={handleCriteriaText} />
+        {/* <ol>
           {criteriaList.map((c, idx) => {
             return <li key={idx}>{c.value}</li>;
           })}
-        </ol>
+        </ol> */}
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">

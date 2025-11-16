@@ -4,6 +4,9 @@ import { useTasks } from "../api/useTasks";
 import { useTokenContext } from "../context/TokenContext";
 import { CreateTaskForm } from "./TaskForm";
 import { UserIcon } from "@heroicons/react/24/solid";
+import { FireIcon } from "@heroicons/react/24/solid";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
 import api from "../api/client";
 
 export default function KanbanBoard({ user, projectId }) {
@@ -184,15 +187,28 @@ export default function KanbanBoard({ user, projectId }) {
                                   : "bg-blue-500"
                               } text-white rounded-b p-1 mb-1 text-right`}
                             >
-                              <div>
-                                <span>
-                                  <UserIcon className="size-4 text-white-500 inline-block mr-1" />
-                                  {task.status !== "backlog" ? (
-                                    <span>{user.username}</span>
-                                  ) : (
-                                    <span>NA</span>
-                                  )}
-                                </span>
+                              <div className="flex justify-between">
+                                <div>
+                                  <span>
+                                    {task.priority == "low" ? (
+                                      <ArrowDownCircleIcon className="size-5 text-white-500 inline-block mr-1" />
+                                    ) : task.priority == "regular" ? (
+                                      <ExclamationCircleIcon className="size-5 text-white-500 inline-block mr-1" />
+                                    ) : (
+                                      <FireIcon className="size-5 text-white-500 inline-block mr-1" />
+                                    )}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span>
+                                    <UserIcon className="size-5 text-white-500 inline-block mr-1" />
+                                    {task.status !== "backlog" ? (
+                                      <span>{user.username}</span>
+                                    ) : (
+                                      <span>NA</span>
+                                    )}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
