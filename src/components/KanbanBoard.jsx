@@ -107,6 +107,13 @@ export default function KanbanBoard({ user, projectId }) {
     }
   };
 
+  function stripHtml(html) {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  }
+
+
   return (
     <>
       <div className="flex gap-4 mb-6">
@@ -187,7 +194,7 @@ export default function KanbanBoard({ user, projectId }) {
                             <div className="px-3 py-2 text-gray-700 text-sm border-t bg-gray-50">
                               {task.description ? (
                                 <p className="leading-tight">
-                                  {task.description}
+                                  {stripHtml(task.description).slice(0, 120)}
                                 </p>
                               ) : (
                                 <p className="italic text-gray-400">

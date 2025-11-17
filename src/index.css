@@ -7,6 +7,28 @@ svg{
   display: inline;
 }
 
+.ProseMirror p.is-editor-empty:first-child::before {
+
+  color: #aaa;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+
+.ProseMirror {
+  padding: 5px;
+  min-height: 250px;
+  overflow-y: auto;
+}
+
+.ProseMirror:focus {
+  outline: none;
+  border-color: #999;
+}
+
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

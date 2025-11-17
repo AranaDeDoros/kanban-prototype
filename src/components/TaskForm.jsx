@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useCreateTask } from "../api/useCreateTask";
 import { CriteriaList } from "./CriteriaList";
+import RichText from "./RichText";
 
 export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const defaultObj = {
@@ -28,7 +29,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     if (projectId) {
       setFormData((prev) => ({ ...prev, project: projectId }));
     }
-  }, [projectId]);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,10 +46,15 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       return;
     }
 
-    if (Array.isArray(criteriaList) && criteriaList.length > 0) {
+    if (criteriaList.length > 0) {
       formData.acceptance_criteria = criteriaList
         .map((c) => c.value)
         .join("\n");
+    } else if(criteriaList.length < 1){
+      console.log(criteriaList)
+      setError("Must add at least one criteria")
+      setLoading(false);
+      return;
     }
 
     createTask(formData, {
@@ -91,7 +97,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
           required
         />
       </div>
@@ -99,12 +105,18 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         <label className="block text-sm font-medium text-gray-700">
           Description
         </label>
-        <textarea
+        {/* <textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
           rows="3"
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
+        /> */}
+        <RichText
+          value={formData.description}
+          onChange={(html) =>
+            setFormData((prev) => ({ ...prev, description: html }))
+          }
         />
       </div>
       <div className="mb-3">
@@ -115,7 +127,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           name="status"
           disabled
           defaultValue={formData.status}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 "
         >
           {/* <option value="">Select a status</option> */}
           <option value="backlog" defaultValue aria-readonly>
@@ -125,7 +137,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       </div>
 
       <div className="mb-3">
-        <CriteriaList key={criteriaResetKey}  onChange={handleCriteriaText} />
+        <CriteriaList key={criteriaResetKey} onChange={handleCriteriaText} />
         {/* <ol>
           {criteriaList.map((c, idx) => {
             return <li key={idx}>{c.value}</li>;
@@ -142,10 +154,10 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
             type="number"
             max={10}
             name="estimate"
-            value={formData.estimate}
+            value={formData.estimate_points}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md p-2
-                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
             required
           />
         </div>
