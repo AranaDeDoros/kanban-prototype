@@ -29,7 +29,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     if (projectId) {
       setFormData((prev) => ({ ...prev, project: projectId }));
     }
-  }, []);
+  }, [projectId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
