@@ -16,14 +16,14 @@ function AppContent() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
 
-  const { data, isLoading, error } = !isLoginPage ? useToken() : {};
+  const { data, isLoading, error } = useToken();
+  const token = !isLoginPage ? data?.access : null;
 
   if (!isLoginPage) {
     if (isLoading) return <p>Loading token...</p>;
     if (error) return <p>Failed to load token</p>;
   }
 
-  const token = data?.access;
 
   return (
     <div className="p-6">
@@ -36,14 +36,6 @@ function AppContent() {
           element={
             <TokenContext.Provider value={token}>
               <ProjectsPage />
-            </TokenContext.Provider>
-          }
-        />
-        <Route
-          path="/tasks"
-          element={
-            <TokenContext.Provider value={token}>
-              <TasksPage />
             </TokenContext.Provider>
           }
         />

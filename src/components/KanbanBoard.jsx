@@ -7,12 +7,14 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import { FireIcon } from "@heroicons/react/24/solid";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 import api from "../api/client";
 
 export default function KanbanBoard({ user, projectId }) {
   const token = useTokenContext();
   const { data: tasks, isLoading } = useTasks(projectId, token);
   const [showCreateForm, setshowCreateForm] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8000/ws/tasks/");
@@ -54,7 +56,7 @@ export default function KanbanBoard({ user, projectId }) {
   const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   useEffect(() => {

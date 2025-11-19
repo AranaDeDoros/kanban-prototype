@@ -9,7 +9,7 @@ export const CriteriaList = ({ onChange }) => {
 
   useEffect(() => {
     onChange?.(items);
-  }, [items]);
+  }, [onChange, items]);
 
   useEffect(() => {
     const prevLen = prevLengthRef.current;

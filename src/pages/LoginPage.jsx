@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useAuth } from "../api/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { mutate: auth, isPending } = useAuth({});
+  const navigate = useNavigate();
+  const { mutate: auth } = useAuth();
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -20,7 +22,7 @@ export default function LoginPage() {
     console.log("submit");
     e.preventDefault();
     setError("");
-
+    setLoading(true)
     auth(
       {
         username: username,
@@ -31,9 +33,13 @@ export default function LoginPage() {
           console.log("auth -> " + auth);
           localStorage.setItem("token", auth.access);
           localStorage.setItem("refresh", auth.refresh);
-          window.location.href = "projects/"
+          setLoading(false);
+          navigate("/projects");
         },
-        onError: () => setError("Login error"),
+        onError: () => {
+          setError("Login error");
+          setLoading(false);
+        }
       }
     );
   };
