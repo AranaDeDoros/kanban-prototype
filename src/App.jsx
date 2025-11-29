@@ -38,14 +38,13 @@ function AppContent() {
         />
 
         <Route
-          path="/tasks/new"
+          path="/projects/new"
           element={
             <TokenContext.Provider value={token}>
               <CreateProjectPage />
             </TokenContext.Provider>
           }
         />
-        <Route path="/projects/new" element={<b>add project</b>} />
 
         <Route
           path="*"
