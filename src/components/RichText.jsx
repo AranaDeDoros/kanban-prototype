@@ -24,7 +24,7 @@ export default function RichTextEditor({ value, onChange }) {
   return (
     <div className="border rounded-md bg-white shadow-sm"
     >
-      <div className="flex gap-2 border-b p-2 bg-gray-50">
+      <div className="flex gap-1 border-b p-1 bg-gray-50">
         <button
         type="button"
           className={`px-2 py-1 rounded ${

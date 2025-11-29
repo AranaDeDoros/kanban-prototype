@@ -51,7 +51,9 @@ export const CriteriaList = ({ onChange }) => {
             justifyContent: "space-between",
           }}
         >
-          <span>Criteria:</span>
+          <label className="block text-sm font-medium text-gray-700">
+            Criteria:
+          </label>
           <button onClick={handleCreate}>
             <PlusIcon className="size-4 text-red-500 inline-block mr-1" />
           </button>

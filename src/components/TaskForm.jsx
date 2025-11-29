@@ -87,21 +87,20 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto"
+      className="rounded-lg px-6 w-full max-w-md mx-auto"
     >
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">Create Task</h2>
-      <div className="mb-3">
+      <div className="mb-1">
         <label className="block text-sm font-medium text-gray-700">Title</label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
+          className="mt-1 block w-full border border-gray-100 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
           required
         />
       </div>
-      <div className="mb-3">
+      <div className="mb-1">
         <label className="block text-sm font-medium text-gray-700">
           Description
         </label>
@@ -112,14 +111,16 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           rows="3"
           className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
         /> */}
-        <RichText
-          value={formData.description}
-          onChange={(html) =>
-            setFormData((prev) => ({ ...prev, description: html }))
-          }
-        />
+        <div className="mb-2 max-h-40 overflow-y-auto">
+          <RichText
+            value={formData.description}
+            onChange={(html) =>
+              setFormData((prev) => ({ ...prev, description: html }))
+            }
+          />
+        </div>
       </div>
-      <div className="mb-3">
+      <div className="mb-1">
         <label className="block text-sm font-medium text-gray-700">
           Status
         </label>
@@ -136,7 +137,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         </select>
       </div>
 
-      <div className="mb-3">
+      <div className="mb-1 max-h-32 overflow-y-auto">
         <CriteriaList key={criteriaResetKey} onChange={handleCriteriaText} />
         {/* <ol>
           {criteriaList.map((c, idx) => {
@@ -145,8 +146,8 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         </ol> */}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="mb-3">
+      <div className="grid grid-cols-2 gap-4 mb-1">
+        <div className="mb-1">
           <label className="block text-sm font-medium text-gray-700">
             Estimate
           </label>
@@ -162,7 +163,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-1">
           <label className="block text-sm font-medium text-gray-700">
             Priority
           </label>
@@ -182,7 +183,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
         </div>
       </div>
 
-      {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+      {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
       <button
         type="submit"
         disabled={loading}

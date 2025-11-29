@@ -28,6 +28,18 @@ svg{
   border-color: #999;
 }
 
+.status-dot{
+  border-radius: 50%;
+  width: 1em; /* Set equal width and height */
+  height: 1em;
+
+}
+
+.status-dot.online { background: #4caf50; }
+.status-dot.offline { background: #f44336; }
+.status-dot.error { background: #ff9800; }
+.status-dot.connecting { background: #2196f3; }
+
 
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
