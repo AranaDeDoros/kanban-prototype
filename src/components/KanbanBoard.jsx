@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useTasks } from "../api/useTasks";
 import { useTokenContext } from "../context/TokenContext";
 import { CreateTaskForm } from "./TaskForm";
-import { UserIcon } from "@heroicons/react/24/solid";
+/* import { UserIcon } from "@heroicons/react/24/solid";
 import { FireIcon } from "@heroicons/react/24/solid";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowDownCircleIcon } from "@heroicons/react/24/solid"; */
 import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import api from "../api/client";
+import { Task } from "./Task";
 
 export default function KanbanBoard({ user, projectId }) {
   const token = useTokenContext();
@@ -222,7 +223,7 @@ export default function KanbanBoard({ user, projectId }) {
                     type="text"
                     placeholder="search"
                     onChange={(v) => handleSearch(v.target.value, key)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue"
+                    className="mt-1 block w-full border border-gray-100 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue bg-[#dddeeef]"
                   />
 
                   {/* scroll*/}
@@ -255,7 +256,9 @@ export default function KanbanBoard({ user, projectId }) {
                                 bg-white
                               "
                             >
-                              <div
+                              {/* task */}
+                              <Task task={task} user={user} stripHtml={stripHtml} />
+                          {/*     <div
                                 className={`
                                   px-3 py-2 flex justify-between items-center text-white
                                   bg-gradient-to-r
@@ -310,7 +313,8 @@ export default function KanbanBoard({ user, projectId }) {
                                     ? user.username
                                     : "NA"}
                                 </span>
-                              </div>
+                              </div> */}
+                              {/* task */}
                             </div>
                           )}
                         </Draggable>
