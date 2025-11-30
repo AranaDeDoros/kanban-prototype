@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import {useTokenContext} from "../hooks/useTokenContext";
+import { useTokenContext } from "../hooks/useTokenContext";
 import { useUser } from "../api/useUser";
 import { useCreateProject } from "../api/useCreateProject";
 import Toast from "../components/Toast";
+import { useUsers } from "../api/useUsers";
+import MembersMultiSelect from "../components/MultiSelect";
 
 export default function CreateProjectPage() {
   const defaultObj = {
@@ -11,14 +13,16 @@ export default function CreateProjectPage() {
     members: [],
   };
 
-  const {token} = useTokenContext();
+  const { token } = useTokenContext();
   const { data: user } = useUser(token);
   const [owner, setOwner] = useState(null);
   const [formData, setFormData] = useState(defaultObj);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { data: users, isLoading } = useUsers(token);
   const { mutate: createProject } = useCreateProject(token);
   const [showToast, setShowToast] = useState(false);
+  const [selectedMembers, setSelectedMembers] = useState([]);
 
   useEffect(() => {
     console.log("user changed in CreateProjectPage:", user);
@@ -47,7 +51,7 @@ export default function CreateProjectPage() {
       return;
     }
 
-    if (!formData.members.length < 1) {
+    if (formData.members.length < 1) {
       setError("Must add at least one member");
       setLoading(false);
       return;
@@ -107,14 +111,26 @@ export default function CreateProjectPage() {
           <label className="block text-sm font-medium text-gray-700">
             Members
           </label>
-          <select
+          {/*  <select
             name="members"
             className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 "
           >
             <option value="1" defaultValue aria-readonly>
               Users this will evenually show a list of users
             </option>
-          </select>
+          </select> */}
+          <MembersMultiSelect
+            users={users}
+            isLoading={isLoading}
+            value={selectedMembers}
+            onChange={(values) => {
+              setSelectedMembers(values);
+              setFormData((prev) => ({
+                ...prev,
+                members: values.map((v) => v.value),
+              }));
+            }}
+          />
         </div>
 
         <div className="mb-1">

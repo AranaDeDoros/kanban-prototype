@@ -11,7 +11,7 @@ export const useCreateProject = (token) => {
         {
           name: projectDTO.name,
           description: projectDTO.description,
-          members: [1],  // Temporary hardcoded member ID
+          members: projectDTO.members
         },
         {
           headers: { Authorization: `Bearer ${token}` },
