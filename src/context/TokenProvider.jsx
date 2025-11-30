@@ -1,13 +1,17 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { TokenContext } from "./TokenContext";
 
 export function TokenProvider({ children }) {
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
   const appName = "KanbanProto";
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
-    if (savedToken) setToken(savedToken);
+    if (savedToken) {
+      setToken(savedToken);
+      setLoading(false);
+    }
   }, []);
 
   const login = (newToken) => {
@@ -22,7 +26,7 @@ export function TokenProvider({ children }) {
   };
 
   return (
-    <TokenContext.Provider value={{ token, login, logout, appName }}>
+    <TokenContext.Provider value={{ token, login, logout, appName, loading }}>
       {children}
     </TokenContext.Provider>
   );

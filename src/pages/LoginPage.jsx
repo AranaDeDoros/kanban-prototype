@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../api/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useTokenContext } from "../hooks/useTokenContext";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login } = useTokenContext();
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate: auth } = useAuth();
@@ -31,9 +33,10 @@ export default function LoginPage() {
       {
         onSuccess: (auth) => {
           console.log("auth -> " + JSON.stringify(auth));
-          localStorage.setItem("token", auth.access);
+          //localStorage.setItem("token", auth.access);
           localStorage.setItem("refresh", auth.refresh);
           setLoading(false);
+          login(auth.access);
           navigate("/projects");
         },
         onError: () => {
@@ -45,7 +48,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center ">
+    <div className="flex h-130 items-center justify-center ">
       <form
         method="POST"
         onSubmit={handleSubmit}
