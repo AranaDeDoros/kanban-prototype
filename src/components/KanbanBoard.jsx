@@ -1,19 +1,20 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useTasks } from "../api/useTasks";
-import {useTokenContext} from "../hooks/useTokenContext";
+import { useTokenContext } from "../hooks/useTokenContext";
 import { CreateTaskForm } from "./TaskForm";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import api from "../api/client";
 import { Task } from "./Task";
+import { DocumentIcon, FunnelIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 export default function KanbanBoard({ user, projectId }) {
-  const {token} = useTokenContext();
+  const { token } = useTokenContext();
   const { data: tasks, isLoading } = useTasks(projectId, token);
   const [showCreateForm, setshowCreateForm] = useState(false);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [status, setStatus] = useState("connecting");
   const [search, setSearch] = useState({ backlog: "", wip: "", done: "" });
 
@@ -61,11 +62,11 @@ export default function KanbanBoard({ user, projectId }) {
     done: [],
   });
 
-  const logout = () => {
+  /*   const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     navigate("/login");
-  };
+  }; */
 
   useEffect(() => {
     if (tasks) {
@@ -132,16 +133,22 @@ export default function KanbanBoard({ user, projectId }) {
       <div className="flex gap-4 mb-6">
         <button
           onClick={() => setshowCreateForm(!showCreateForm)}
-          className="px-3 py-1 rounded bg-blue-600 text-white"
+          className="px-3 py-1 rounded bg-indigo-600 rounded-md font-semibold text-white
+            bg-gradient-to-r from-indigo-500 to-cyan-500
+            hover:from-indigo-600 hover:to-cyan-600
+            transition-all shadow-md hover:shadow-lg
+            active:scale-[0.98]"
         >
-          add task
+          <PlusIcon className="size-5 inline-block mr-1" />
+          task
+          {/* add task */}
         </button>
-        <button
+        {/* <button
           onClick={logout}
           className="px-3 py-1 rounded bg-red-600 text-white"
         >
           logout
-        </button>
+        </button> */}
       </div>
 
       <Transition appear show={showCreateForm} as={Fragment}>
@@ -215,12 +222,25 @@ export default function KanbanBoard({ user, projectId }) {
                   <div className="p-4 border-b font-bold text-gray-700 uppercase text-center bg-white sticky top-0 z-10">
                     {key}
                   </div>
-                  <input
-                    type="text"
-                    placeholder="search"
-                    onChange={(v) => handleSearch(v.target.value, key)}
-                    className="mt-1 block w-full border border-gray-100 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 caret-blue bg-[#dddeeef]"
-                  />
+                  <div className="relative w-full p-2">
+                    <FunnelIcon
+                      className="
+                                size-4 text-gray-400
+                                absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none
+                              "
+                    />
+
+                    <input
+                      type="text"
+                      placeholder="search"
+                      onChange={(v) => handleSearch(v.target.value, key)}
+                      className="
+                                block w-full border border-gray-200 rounded-md p-2 pl-9
+                                focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                bg-[#ddeef]
+                              "
+                    />
+                  </div>
 
                   {/* scroll*/}
                   <div className="flex-1 overflow-y-auto p-4 space-y-2">

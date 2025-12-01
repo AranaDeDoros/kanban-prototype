@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../api/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useTokenContext } from "../hooks/useTokenContext";
+import { KeyIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -61,32 +62,36 @@ export default function LoginPage() {
           />
         </div>
         <div className="mb-3 w-full">
-          <label className="block text-sm font-medium text-gray-700">
-            Username
-          </label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={handleUsername}
-            autoComplete="username"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
+          <label className="block text-sm font-medium text-gray-700"></label>
+          <div className="relative w-full p-2">
+            <UserCircleIcon className="size-6 text-sky-600 absolute left-5 top-1/2 -translate-y-1/3 pointer-events-none" />
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={handleUsername}
+              autoComplete="username"
+              placeholder=" username"
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pl-12"
+              required
+            />
+          </div>
         </div>
         <div className="mb-3 w-full">
-          <label className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={handlePassword}
-            autoComplete="current-password"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
+          <label className="block text-sm font-medium text-gray-700"></label>
+          <div className="relative w-full p-2">
+            <KeyIcon className="size-6 text-sky-600 absolute left-5 top-1/2 -translate-y-1/3 pointer-events-none" />
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={handlePassword}
+              autoComplete="current-password"
+              placeholder="password"
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pl-12"
+              required
+            />
+          </div>
         </div>
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
         <button
