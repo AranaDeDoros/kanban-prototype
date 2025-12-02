@@ -154,7 +154,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
           <input
             type="number"
             max={10}
-            name="estimate"
+            name="estimate_points"
             value={formData.estimate_points}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md p-2
