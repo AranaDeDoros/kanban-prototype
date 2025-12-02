@@ -199,11 +199,23 @@ export default function KanbanBoard({ user, projectId }) {
         <div className="grid grid-cols-3 gap-4 p-4 min-h-screen bg-gray-100">
           {Object.entries(columns).map(([key, items]) => (
             <Droppable droppableId={key} key={key}>
-              {(provided) => (
+              {(provided, snapshot) => (
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="bg-gray-50 rounded-lg shadow flex flex-col h-[calc(100vh-4rem)]"
+                  className={`
+                            rounded-xl overflow-hidden
+                            shadow-md
+                            border border-gray-200
+                            bg-white
+                            transition-all duration-300
+
+                            ${
+                              snapshot.isDragging
+                                ? "rotate-[1deg] scale-[1.02] shadow-xl"
+                                : ""
+                            }
+      `}
                 >
                   <div className="p-4 border-b font-bold text-gray-700 uppercase text-center bg-white sticky top-0 z-10">
                     {key}
@@ -245,18 +257,29 @@ export default function KanbanBoard({ user, projectId }) {
                           index={index}
                           isDragDisabled={task.status === "done"}
                         >
-                          {(provided) => (
+                          {(provided, snapshot) => (
                             <div
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
-                              className="
-                                rounded-xl overflow-hidden
-                                shadow-md hover:shadow-lg
-                                transition-all duration-200
-                                border border-gray-200
-                                bg-white
-                              "
+                              className={`
+                                    rounded-xl overflow-hidden
+                                    shadow-md
+                                    border border-gray-200
+                                    bg-white
+
+                                    transition-all duration-300
+                                    ${
+                                      snapshot.isDragging
+                                        ? "shadow-xl"
+                                        : "shadow-md"
+                                    }
+                                    ${
+                                      snapshot.isDragging
+                                        ? "rotate-[1deg] scale-[1.02] shadow-xl"
+                                        : ""
+                                    }
+      `}
                             >
                               {/* task */}
                               <Task
@@ -264,62 +287,6 @@ export default function KanbanBoard({ user, projectId }) {
                                 user={task.assigned_to_user}
                                 stripHtml={stripHtml}
                               />
-                              {/*     <div
-                                className={`
-                                  px-3 py-2 flex justify-between items-center text-white
-                                  bg-gradient-to-r
-                                  ${
-                                    task.status === "done"
-                                      ? "from-green-500 to-green-600"
-                                      : task.status === "wip"
-                                      ? "from-orange-400 to-orange-500"
-                                      : "from-blue-500 to-blue-600"
-                                  }
-                                `}
-                              >
-                                <strong className="text-sm">
-                                  {task.title}
-                                </strong>
-
-                                <div>
-                                  {task.priority === "low" ? (
-                                    <ArrowDownCircleIcon className="size-5 text-white" />
-                                  ) : task.priority === "regular" ? (
-                                    <ExclamationCircleIcon className="size-5 text-white" />
-                                  ) : (
-                                    <FireIcon className="size-5 text-white" />
-                                  )}
-                                </div>
-                              </div>
-
-                              <div className="px-3 py-2 text-gray-700 text-sm border-t bg-gray-50">
-                                {task.description ? (
-                                  <p className="leading-tight">
-                                    {stripHtml(task.description).slice(0, 120)}
-                                  </p>
-                                ) : (
-                                  <p className="italic text-gray-400">
-                                    No description
-                                  </p>
-                                )}
-                              </div>
-
-                              <div
-                                className={`${
-                                  task.status === "done"
-                                    ? "bg-green-50"
-                                    : task.status === "wip"
-                                    ? "bg-orange-50"
-                                    : "bg-blue-50"
-                                } px-3 py-2 rounded-b-md border-t flex justify-end`}
-                              >
-                                <span className="flex items-center gap-1 text-gray-700 text-sm">
-                                  <UserIcon className="size-4 text-gray-600" />
-                                  {task.status !== "backlog"
-                                    ? user.username
-                                    : "NA"}
-                                </span>
-                              </div> */}
                               {/* task */}
                             </div>
                           )}
