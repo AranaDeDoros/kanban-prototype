@@ -7,7 +7,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import api from "../api/client";
 import { Task } from "./Task";
-import { FunnelIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { BoltIcon, FunnelIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 export default function KanbanBoard({ user, projectId }) {
   const { token } = useTokenContext();
@@ -191,7 +191,9 @@ export default function KanbanBoard({ user, projectId }) {
       </Transition>
 
       <div className="p-2 grid grid-flow-col auto-cols-max items-center justify-end gap-2">
-        <p className={`status-dot ${status}`}></p>
+        {status === "online" && (<BoltIcon className="size-5 text-green-500 animate-pulse" />)}
+        {status === "offline" && (
+          <BoltIcon className="size-5 text-gray-400 animate-pulse" /> )}
         <span>{status}</span>
       </div>
 

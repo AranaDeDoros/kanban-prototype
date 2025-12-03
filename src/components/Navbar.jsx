@@ -5,7 +5,7 @@ export function Navbar() {
   return (
     <nav className="shadow-xl bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
       <div className="flex items-center">
-        <img src="/public/kanban.png" alt="Logo" className="h-8 w-8 mr-2" />
+        <img src="/kanban.png" alt="Logo" className="h-10 w-10 mr-2" />
         <span className="font-bold text-lg">{appName}</span>
       </div>
 
