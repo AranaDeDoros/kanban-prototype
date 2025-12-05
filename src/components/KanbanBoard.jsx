@@ -123,18 +123,20 @@ export default function KanbanBoard({ user, projectId }) {
   return (
     <>
       <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setshowCreateForm(!showCreateForm)}
-          className="px-3 py-1 rounded bg-indigo-600 rounded-md font-semibold text-white
+        {user.isAdmin && (
+          <button
+            onClick={() => setshowCreateForm(!showCreateForm)}
+            className="px-3 py-1 rounded bg-indigo-600 rounded-md font-semibold text-white
             bg-gradient-to-r from-indigo-500 to-cyan-500
             hover:from-indigo-600 hover:to-cyan-600
             transition-all shadow-md hover:shadow-lg
             active:scale-[0.98]"
-        >
-          <PlusIcon className="size-5 inline-block mr-1" />
-          task
-          {/* add task */}
-        </button>
+          >
+            <PlusIcon className="size-5 inline-block mr-1" />
+            task
+            {/* add task */}
+          </button>
+        )}
       </div>
 
       <Transition appear show={showCreateForm} as={Fragment}>
@@ -191,9 +193,12 @@ export default function KanbanBoard({ user, projectId }) {
       </Transition>
 
       <div className="p-2 grid grid-flow-col auto-cols-max items-center justify-end gap-2">
-        {status === "online" && (<BoltIcon className="size-5 text-green-500 animate-pulse" />)}
+        {status === "online" && (
+          <BoltIcon className="size-5 text-green-500 animate-pulse" />
+        )}
         {status === "offline" && (
-          <BoltIcon className="size-5 text-gray-400 animate-pulse" /> )}
+          <BoltIcon className="size-5 text-gray-400 animate-pulse" />
+        )}
         <span>{status}</span>
       </div>
 

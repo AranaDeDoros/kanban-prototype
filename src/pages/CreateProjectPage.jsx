@@ -22,7 +22,7 @@ export default function CreateProjectPage() {
   const [error, setError] = useState("");
   const { data: users, isLoading } = useUsers(token);
   const { mutate: createProject } = useCreateProject(token);
-  const [showToast, setShowToast] = useState(true);
+  const [showToast, setShowToast] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
 
   useEffect(() => {
