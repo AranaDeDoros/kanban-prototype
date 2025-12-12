@@ -3,6 +3,7 @@ import { useCreateTask } from "../api/useCreateTask";
 import { CriteriaList } from "./CriteriaList";
 //import RichText from "./RichText";
 import { useUsers } from "../api/useUsers";
+import { useTags } from "../api/useTags";
 //import MembersSingleSelect from "../components/SingleSelect";
 import { PaperClipIcon } from "@heroicons/react/24/solid";
 import ReactSelect from "./ReactSelect";
@@ -18,7 +19,8 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     acceptance_criteria: "",
     attachments: [], // not stored yet in backend
     assigned_to: null,
-    tags: [],
+    existingTags: [],
+    newTags: [],
   };
   const [formData, setFormData] = useState(defaultObj);
   const [loading, setLoading] = useState(false);
@@ -26,6 +28,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
   const { mutate: createTask } = useCreateTask(token);
   const [criteriaResetKey, setCriteriaResetKey] = useState(0);
   const { data: users, isLoading } = useUsers(token);
+  const { data: tags } = useTags(token);
   const [assignedTo, setAssignedTo] = useState([]);
   const [assignedTags, setAssignedTags] = useState([]);
 
@@ -49,6 +52,11 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     if (!users) return [];
     return users.map(userSelectMapper);
   }, [users, userSelectMapper]);
+
+  const tagOptions = useMemo(() => {
+    if (!tags) return [];
+    return tags.map(tagSelectMapper);
+  }, [tags, tagSelectMapper]);
 
   const [criteriaList, setCriteriaList] = useState([]);
   const handleCriteriaText = (items) => {
@@ -89,6 +97,8 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       "acceptance_criteria",
       criteriaList.map((c) => c.value).join("\n")
     );
+    fd.append("existingTags", JSON.stringify(formData.existingTags));
+    fd.append("newTags", JSON.stringify(formData.newTags));
 
     if (formData.assigned_to) fd.append("assigned_to", formData.assigned_to);
 
@@ -108,44 +118,6 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       },
     });
   };
-
-  /* const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    if (!formData.project) {
-      setError("Missing project ID");
-      setLoading(false);
-      return;
-    }
-
-    if (criteriaList.length > 0) {
-      formData.acceptance_criteria = criteriaList
-        .map((c) => c.value)
-        .join("\n");
-    } else if (criteriaList.length < 1) {
-      console.log(criteriaList);
-      setError("Must add at least one criteria");
-      setLoading(false);
-      return;
-    }
-
-    console.log("Submitting form data:", formData);
-    console.log("FORM BEFORE SUBMIT:", JSON.stringify(formData, null, 2));
-
-    createTask(formData, {
-      onSuccess: (newTask) => {
-        onTaskCreated?.(newTask);
-        setFormData(defaultObj);
-      },
-      onError: () => setError("Error creating task"),
-      onSettled: () => {
-        setLoading(false);
-        handleReset();
-      },
-    });
-  }; */
 
   const handleReset = () => {
     setCriteriaResetKey((prev) => prev + 1);
@@ -281,15 +253,25 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
       <div className="mb-1">
         <label className="block text-sm font-medium text-gray-700">Tags</label>
         <ReactSelect
-          catalog={[]}
+          isCreateTable={true}
+          catalog={tagOptions}
           isLoading={isLoading}
           value={assignedTags}
           onChange={(value) => {
-            console.log(value);
             setAssignedTags(value);
+
+            const existingTagIds = value
+              .filter((v) => !v.__isNew__)
+              .map((v) => v.value);
+
+            const newTagNames = value
+              .filter((v) => v.__isNew__)
+              .map((v) => v.label.toLowerCase());
+
             setFormData((prev) => ({
               ...prev,
-              tags: value.map((v) => v.value),
+              existingTags: existingTagIds,
+              newTags: newTagNames,
             }));
           }}
           placeholder="Add tags..."

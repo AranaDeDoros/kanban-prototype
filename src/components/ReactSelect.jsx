@@ -1,4 +1,5 @@
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 
 export default function ReactSelect({
   catalog,
@@ -7,9 +8,11 @@ export default function ReactSelect({
   isLoading,
   isMulti = false,
   placeholder,
+  isCreateTable = false,
 }) {
-
-  return (
+  return isCreateTable ? (
+    <CreatableSelect />
+  ) : (
     <Select
       options={catalog}
       value={value}

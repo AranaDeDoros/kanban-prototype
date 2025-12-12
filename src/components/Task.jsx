@@ -19,7 +19,7 @@ import { Fragment } from "react";
 import { useState } from "react";
 
 //striphtml might change into a utility function later idk
-export const Task = ({ user, task, stripHtml }) => {
+export const Task = ({ user, task, stripHtml, tags }) => {
   const [open, setOpen] = useState(false);
   const bgColors = {
     done: "from-green-500 to-green-600",
@@ -169,15 +169,13 @@ export const Task = ({ user, task, stripHtml }) => {
                     <TagIcon className="size-5 text-gray-600" />
                   </div>
                   <div className="flex items-center gap-1 cursor-pointer">
-                    <span className={`${hardBg[task.status]} chip`}>
-                      some static tag 1
-                    </span>
-                    <span className={`${hardBg[task.status]} chip`}>
-                      some static tag 2
-                    </span>
-                    <span className={`${hardBg[task.status]} chip`}>
-                      some static tag 3
-                    </span>
+                    {tags && tags.length > 0 ? (
+                      <span className={`${hardBg[task.status]} chip`}>
+                        some static tag 1
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 italic">No tags</span>
+                    )}
                   </div>
                 </div>
               </div>
