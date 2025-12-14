@@ -293,7 +293,6 @@ export default function KanbanBoard({ user, projectId }) {
                                 task={task}
                                 user={task.assigned_to_user}
                                 stripHtml={stripHtml}
-                                tags={task.tags}
                               />
                               {/* task */}
                             </div>

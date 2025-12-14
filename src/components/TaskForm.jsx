@@ -124,6 +124,7 @@ export function CreateTaskForm({ token, onTaskCreated, projectId }) {
     setCriteriaList([]);
     setAssignedTo(null);
     setFormData(defaultObj);
+    setAssignedTags(null);
   };
 
   return (

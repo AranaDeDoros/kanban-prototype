@@ -19,7 +19,7 @@ import { Fragment } from "react";
 import { useState } from "react";
 
 //striphtml might change into a utility function later idk
-export const Task = ({ user, task, stripHtml, tags }) => {
+export const Task = ({ user, task, stripHtml }) => {
   const [open, setOpen] = useState(false);
   const bgColors = {
     done: "from-green-500 to-green-600",
@@ -159,9 +159,18 @@ export const Task = ({ user, task, stripHtml, tags }) => {
                 <div className="flex items-center gap-2 text-sm">
                   <PaperClipIcon className="size-5 text-gray-600" />
                   <strong>Attachments</strong>
-                  <a href="#" className="lowercase text-blue-600">
-                    template_test_file.pdf
-                  </a>
+                  {task.attachments.length === 0 && (
+                    <span className="text-gray-400 italic">No attachments</span>
+                  )}
+                  {task.attachments.map((att) => (
+                    <a
+                      key={att.id}
+                      href={att.file}
+                      className="lowercase text-blue-600"
+                    >
+                      {att.filename}
+                    </a>
+                  ))}
                 </div>
 
                 <div className="flex items-center gap-2 text-sm ">
@@ -169,11 +178,15 @@ export const Task = ({ user, task, stripHtml, tags }) => {
                     <TagIcon className="size-5 text-gray-600" />
                   </div>
                   <div className="flex items-center gap-1 cursor-pointer">
-                    {tags && tags.length > 0 ? (
-                      <span className={`${hardBg[task.status]} chip`}>
-                        some static tag 1
+                    {task.tags.map((tag) => (
+                      <span
+                        key={tag.id}
+                        className={`${hardBg[task.status]} chip`}
+                      >
+                        {tag.name}
                       </span>
-                    ) : (
+                    ))}
+                    {task.tags.length == 0 && (
                       <span className="text-gray-400 italic">No tags</span>
                     )}
                   </div>
