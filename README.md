@@ -13,3 +13,6 @@ A small test side project. WIP.
 - Tailwind
 
 Backend [here](https://github.com/AranaDeDoros/kanban-prototype-backend)
+
+## TODO
+- [ ] Add tags filtering on kanban.
