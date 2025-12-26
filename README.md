@@ -1,7 +1,8 @@
-# Kanban prototype
+# KanbAnpp
 
-A small test side project. WIP.
+<p align="center"><img height="400"  alt="KanbAnpp" src="public/kanban.png" /></p>
 
+<p align="center">A simple, lightweight Kanban webapp. WIP.</p>
 
 ## Frontend tech
 
